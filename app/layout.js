@@ -1,32 +1,46 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
+import Header from "@/components/header";
 import "./globals.css";
-
+import { dark } from "@clerk/themes";
+import { ThemeProvider } from "@/components/theme-provider";
+import Footer from "@/components/footer";
+import { ConvexClientProvider } from "@/components/convex-client-provider";
+import { Toaster } from "sonner";
 
 export const metadata = {
-  title: "AI POWERED EVENT ORGANIZER & PLANNER",
-  description: "Discover and Manage Events",
+  title: "Spott - Delightful Events Start Here",
+  description: "Discover and create amazing events",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`bg-gradient-to-br from-gray-950 via-zinc-900 to-stone-900 text-white`}
-      >
-        {/* Header */}
-        <header className="p-4 text-center text-xl font-bold">
-          AI Event Organizer
-        </header>
+      <body className="bg-linear-to-br from-gray-950 via-zinc-900 to-stone-900 text-white">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ClerkProvider appearance={{ baseTheme: dark }}>
+            <ConvexClientProvider>
+              <Header />
 
-        {/* Main Content */}
-        <main className="relative min-h-screen container mx-auto pt-20">
-          <div className="relative z-10">{children}</div>
-        </main>
+              <main className="relative min-h-screen container mx-auto pt-40 md:pt-32">
+                {/* Background glow effects (behind everything) */}
+                <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+                  <div className="absolute top-0 left-1/4 w-96 h-96 bg-pink-600/20 rounded-full blur-3xl" />
+                  <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-orange-600/20 rounded-full blur-3xl" />
+                </div>
 
-        {/* Footer */}
-        <footer className="border-t border-gray-800/50 py-6 text-center">
-          Manage and Create Events with AI Powered Event Organizer
-        </footer>
+                {/* Page content (above glow) */}
+                <div className="relative z-10">{children}</div>
+                <Footer />
+              </main>
+              <Toaster position="top-center" richColors />
+            </ConvexClientProvider>
+          </ClerkProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
